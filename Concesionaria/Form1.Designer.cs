@@ -72,7 +72,7 @@
             pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
             pictureBox1.Location = new Point(12, 12);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(129, 131);
+            pictureBox1.Size = new Size(158, 152);
             pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
             pictureBox1.TabIndex = 1;
             pictureBox1.TabStop = false;
@@ -81,7 +81,7 @@
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Impact", 48F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label1.Location = new Point(192, 9);
+            label1.Location = new Point(209, 9);
             label1.Name = "label1";
             label1.Size = new Size(283, 80);
             label1.TabIndex = 2;
@@ -91,7 +91,7 @@
             // 
             label2.AutoSize = true;
             label2.Font = new Font("Impact", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label2.Location = new Point(323, 81);
+            label2.Location = new Point(340, 81);
             label2.Name = "label2";
             label2.Size = new Size(126, 23);
             label2.TabIndex = 3;
@@ -325,7 +325,7 @@
             // label13
             // 
             label13.AutoSize = true;
-            label13.Location = new Point(74, 155);
+            label13.Location = new Point(87, 154);
             label13.Name = "label13";
             label13.Size = new Size(43, 15);
             label13.TabIndex = 4;
@@ -343,7 +343,7 @@
             // label11
             // 
             label11.AutoSize = true;
-            label11.Location = new Point(74, 96);
+            label11.Location = new Point(98, 96);
             label11.Name = "label11";
             label11.Size = new Size(32, 15);
             label11.TabIndex = 2;
@@ -352,7 +352,7 @@
             // label10
             // 
             label10.AutoSize = true;
-            label10.Location = new Point(74, 67);
+            label10.Location = new Point(79, 67);
             label10.Name = "label10";
             label10.Size = new Size(51, 15);
             label10.TabIndex = 1;
@@ -361,7 +361,7 @@
             // label9
             // 
             label9.AutoSize = true;
-            label9.Location = new Point(74, 38);
+            label9.Location = new Point(87, 38);
             label9.Name = "label9";
             label9.Size = new Size(43, 15);
             label9.TabIndex = 0;
