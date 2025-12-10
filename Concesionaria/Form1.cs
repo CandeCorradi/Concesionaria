@@ -17,8 +17,8 @@ namespace Concesionaria
         private List<Auto> _listaAutosCache = new List<Auto>();
         private bool _esModoEdicion;
         private string _idAutoSeleccionado = string.Empty;
-        private bool _propietarioModoEdicion;
-        private string _idPropietarioSeleccionado;
+        private bool _propietarioModoEdicion = false;
+        private string _idPropietarioSeleccionado = string.Empty;
 
         public Form1()
         {
@@ -31,6 +31,8 @@ namespace Concesionaria
             DataGridAutos.AllowUserToAddRows = false;
             DataGridAutos.ClearSelection();
         }
+
+        //------------------AUTOS------------------//
 
         private void BtnSalir_Click(object sender, EventArgs e)
         {
@@ -317,54 +319,81 @@ namespace Concesionaria
             TabControlAutos.SelectedTab = TabEditar;
         }
 
-
+        //----------------PROPIETARIOS----------------//
         private DTO.Propietario? RecolectarDatosPropietario()
         {
-            if (string.IsNullOrWhiteSpace(TxtNombre.Text) || string.IsNullOrWhiteSpace(TxtDNI.Text))
+            string nombre = TxtNombre.Text?.Trim() ?? string.Empty;
+            string dniText = TxtDNI.Text?.Trim() ?? string.Empty;
+
+            if (string.IsNullOrWhiteSpace(nombre) || string.IsNullOrWhiteSpace(dniText))
             {
                 MessageBox.Show("Nombre e Identificación (DNI) son obligatorios.", "Validación");
                 return null;
             }
 
-            if (!int.TryParse(TxtDNI.Text, out int dni))
+            if (!int.TryParse(dniText, out int dni))
             {
                 MessageBox.Show("El DNI debe ser un número entero válido.", "Error de Formato");
                 TxtDNI.Focus();
+                return null;
+            }
+            if (!int.TryParse(TxtTelefono.Text, out int telefono))
+            {
+                MessageBox.Show("El Teléfono debe ser un número entero válido.", "Error de Formato");
+                TxtTelefono.Focus();
                 return null;
             }
 
             var propietario = new DTO.Propietario
             {
                 Id = null,
-                Nombre = TxtNombre.Text,
+                Nombre = nombre,
                 Apellido = TxtApellido.Text,
                 DNI = dni,
-                Telefono = TxtTelefono.Text != string.Empty && int.TryParse(TxtTelefono.Text, out int telefono) ? telefono : 0
+                Telefono = telefono
             };
+
+            if (_propietarioModoEdicion)
+            {
+                propietario.Id = _idPropietarioSeleccionado;
+            }
 
             return propietario;
         }
 
         private async void BtnGuardarPropietario_Click(object sender, EventArgs e)
         {
-            DTO.Propietario nuevoPropietario = RecolectarDatosPropietario();
+            DTO.Propietario? propietarioData = RecolectarDatosPropietario();
+            bool exito = false;
 
-            if (nuevoPropietario == null) return; // Si la validación falló
+            if (propietarioData == null)
+            {
+                return;
+            }
 
-            // Llamamos a la API con la función que ya está en ApiRest.cs
-            bool exito = await Services.ApiRest.CrearNuevoPropietarioAsync(nuevoPropietario);
+            if (!_propietarioModoEdicion)
+            {
+                exito = await Services.ApiRest.CrearNuevoPropietarioAsync(propietarioData);
+            }
+            else
+            {
+                propietarioData.Id = _idPropietarioSeleccionado;
+                exito = await Services.ApiRest.ActualizarPropietarioAsync(propietarioData);
+            }
 
             if (exito)
             {
-                MessageBox.Show("Propietario registrado con éxito.", "Éxito");
+                MessageBox.Show("Operación de Guardado exitosa.", "Éxito");
+                TabControlAutos.SelectedTab = TabPropietario;
+                LimpiarCamposCarga();
 
-                // Refrescamos las vistas que usan esta colección:
-                await CargarDatosPropietariosEnGrilla(); // Grilla de la pestaña Propietario
-                await CargarPropietariosEnComboBox();    // El ComboBox de la pestaña Edición
-
-                // Limpiamos los campos para poder cargar uno nuevo
-                // (Debes crear la función LimpiarCamposPropietario())
-                LimpiarCamposPropietario();
+                // REFRESH: actualizar tanto la grilla como el ComboBox para que reflejen cambios
+                await CargarDatosPropietariosEnGrilla();
+                await CargarPropietariosEnComboBox();
+            }
+            else
+            {
+                MessageBox.Show("Fallo la operación de guardado. Revisa la conexión o los datos.", "Error");
             }
         }
 
@@ -373,15 +402,34 @@ namespace Concesionaria
             List<DTO.Propietario> listaPropietarios = await Services.ApiRest.ObtenerTodosLosPropietariosAsync();
             CmbPropietario.DataSource = null;
             CmbPropietario.DataSource = listaPropietarios;
-            CmbPropietario.DisplayMember = "NombreCompleto"; // Asumiendo que tienes una propiedad NombreCompleto en DTO.Propietario
+            CmbPropietario.DisplayMember = "NombreCompleto";
             CmbPropietario.ValueMember = "Id";
+            // Mantener sin selección al refrescar para evitar cambios inesperados
+            CmbPropietario.SelectedIndex = -1;
         }
 
         private async Task CargarDatosPropietariosEnGrilla()
         {
             List<DTO.Propietario> listaPropietarios = await Services.ApiRest.ObtenerTodosLosPropietariosAsync();
+
+            // Asegurar que el DataGrid genere columnas automáticamente si no se definieron en el diseñador
+            DataGridPropietarios.AutoGenerateColumns = true;
+
             DataGridPropietarios.DataSource = null;
             DataGridPropietarios.DataSource = listaPropietarios;
+
+            if (DataGridPropietarios.Columns.Count > 0)
+            {
+                if (DataGridPropietarios.Columns.Contains("Id"))
+                {
+                    DataGridPropietarios.Columns["Id"].Visible = true;
+                }
+
+                if (DataGridPropietarios.Columns.Contains("NombreCompleto"))
+                {
+                    DataGridPropietarios.Columns["NombreCompleto"].Visible = false;
+                }
+            }
         }
 
         private void LimpiarCamposPropietario()
@@ -416,6 +464,76 @@ namespace Concesionaria
             LimpiarCamposCarga();
             _propietarioModoEdicion = false;
             _idPropietarioSeleccionado = string.Empty;
+        }
+
+        private void BtnModProp_Click(object sender, EventArgs e)
+        {
+            if (DataGridPropietarios.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Seleccione un propietario de la lista para modificar.", "Advertencia");
+                return;
+            }
+
+            DataGridViewRow filaSeleccionada = DataGridPropietarios.SelectedRows[0];
+            Propietario? propietarioAEditar = filaSeleccionada.DataBoundItem as Propietario;
+
+            if (propietarioAEditar == null || string.IsNullOrEmpty(propietarioAEditar.Id))
+            {
+                MessageBox.Show("No se pudo obtener la información completa del propietario.", "Error");
+                return;
+            }
+
+            _propietarioModoEdicion = true;
+            _idPropietarioSeleccionado = propietarioAEditar.Id;
+
+            TxtNombre.Text = propietarioAEditar.Nombre;
+            TxtApellido.Text = propietarioAEditar.Apellido;
+            TxtDNI.Text = propietarioAEditar.DNI.ToString();
+            TxtTelefono.Text = propietarioAEditar.Telefono.ToString();
+
+            TabControlAutos.SelectedTab = TabPropietario;
+        }
+
+        private async void BtnEliminarProp_Click(object sender, EventArgs e)
+        {
+            if (DataGridPropietarios.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Seleccione un propietario para eliminar.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            DataGridViewRow filaSeleccionada = DataGridPropietarios.SelectedRows[0];
+            DTO.Propietario propietarioAEliminar = filaSeleccionada.DataBoundItem as DTO.Propietario;
+
+            if (propietarioAEliminar == null || string.IsNullOrEmpty(propietarioAEliminar.Id))
+            {
+                MessageBox.Show("No se pudo obtener la información completa del propietario seleccionado.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            DialogResult confirmacion = MessageBox.Show(
+                $"¿Está seguro de que desea eliminar el propietario {propietarioAEliminar.Nombre} {propietarioAEliminar.Apellido}?",
+                "Confirmar Eliminación",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning);
+
+            if (confirmacion == DialogResult.Yes)
+            {
+                bool exito = await ApiRest.EliminarPropietarioAsync(propietarioAEliminar.Id);
+
+                if (exito)
+                {
+                    MessageBox.Show("Propietario eliminado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    // REFRESH: actualizar grilla y ComboBox después de eliminar
+                    await CargarDatosPropietariosEnGrilla();
+                    await CargarPropietariosEnComboBox();
+                }
+                else
+                {
+                    MessageBox.Show("❌ La eliminación falló. Por favor, revise los mensajes de error anteriores para ver el detalle.", "Fallo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
     }
 }

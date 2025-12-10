@@ -12,18 +12,15 @@ namespace Concesionaria.DTO
         [JsonPropertyName("_id")]
         public string Id { get; set; }
 
-        // Asumiendo estos campos en tu nueva colección 'Propietarios'
         public string Nombre { get; set; }
         public string Apellido { get; set; }
         public int DNI { get; set; }
+        [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString)]
         public int Telefono { get; set; }
-        public string NombreCompleto
-        {
-            get
-            {
-                return $"{Nombre} {Apellido}";
-            }
-        }
+
+        // Convertimos a propiedad para que DataBinding y DisplayMember funcionen correctamente
+        [JsonIgnore]
+        public string NombreCompleto => $"{Nombre} {Apellido}";
 
         public override string ToString() => NombreCompleto;
     }

@@ -16,5 +16,17 @@ namespace Concesionaria
         {
             InitializeComponent();
         }
+
+        private void ToolSalir_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void ConautosForm_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            Form1 formConautos = new Form1();
+            formConautos.Show();
+        }
     }
 }

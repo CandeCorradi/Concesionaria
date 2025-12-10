@@ -63,6 +63,8 @@
             label10 = new Label();
             label9 = new Label();
             TabPropietario = new TabPage();
+            BtnModProp = new Button();
+            BtnEliminarProp = new Button();
             DataGridPropietarios = new DataGridView();
             BtnCancelarPropietario = new Button();
             BtnGuardarPropietario = new Button();
@@ -97,7 +99,7 @@
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Impact", 48F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label1.Location = new Point(209, 9);
+            label1.Location = new Point(297, 12);
             label1.Name = "label1";
             label1.Size = new Size(283, 80);
             label1.TabIndex = 2;
@@ -107,7 +109,7 @@
             // 
             label2.AutoSize = true;
             label2.Font = new Font("Impact", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label2.Location = new Point(340, 81);
+            label2.Location = new Point(428, 84);
             label2.Name = "label2";
             label2.Size = new Size(126, 23);
             label2.TabIndex = 3;
@@ -116,7 +118,7 @@
             // BtnBuscar
             // 
             BtnBuscar.BackColor = SystemColors.ActiveBorder;
-            BtnBuscar.Location = new Point(569, 154);
+            BtnBuscar.Location = new Point(749, 154);
             BtnBuscar.Name = "BtnBuscar";
             BtnBuscar.Size = new Size(75, 23);
             BtnBuscar.TabIndex = 4;
@@ -128,15 +130,15 @@
             // 
             txtBusqueda.BackColor = SystemColors.MenuBar;
             txtBusqueda.ForeColor = SystemColors.Desktop;
-            txtBusqueda.Location = new Point(243, 154);
+            txtBusqueda.Location = new Point(317, 154);
             txtBusqueda.Name = "txtBusqueda";
-            txtBusqueda.Size = new Size(315, 23);
+            txtBusqueda.Size = new Size(420, 23);
             txtBusqueda.TabIndex = 5;
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(176, 158);
+            label3.Location = new Point(243, 157);
             label3.Name = "label3";
             label3.Size = new Size(61, 15);
             label3.TabIndex = 6;
@@ -145,7 +147,7 @@
             // BtnAgregar
             // 
             BtnAgregar.BackColor = SystemColors.ActiveBorder;
-            BtnAgregar.Location = new Point(569, 208);
+            BtnAgregar.Location = new Point(749, 208);
             BtnAgregar.Name = "BtnAgregar";
             BtnAgregar.Size = new Size(75, 23);
             BtnAgregar.TabIndex = 8;
@@ -156,7 +158,7 @@
             // BtnModificar
             // 
             BtnModificar.BackColor = SystemColors.ActiveBorder;
-            BtnModificar.Location = new Point(569, 249);
+            BtnModificar.Location = new Point(749, 249);
             BtnModificar.Name = "BtnModificar";
             BtnModificar.Size = new Size(75, 23);
             BtnModificar.TabIndex = 9;
@@ -167,7 +169,7 @@
             // BtnEliminar
             // 
             BtnEliminar.BackColor = SystemColors.ActiveBorder;
-            BtnEliminar.Location = new Point(569, 291);
+            BtnEliminar.Location = new Point(749, 291);
             BtnEliminar.Name = "BtnEliminar";
             BtnEliminar.Size = new Size(75, 23);
             BtnEliminar.TabIndex = 10;
@@ -178,7 +180,7 @@
             // BtnSalir
             // 
             BtnSalir.BackColor = SystemColors.ActiveBorder;
-            BtnSalir.Location = new Point(570, 467);
+            BtnSalir.Location = new Point(750, 467);
             BtnSalir.Name = "BtnSalir";
             BtnSalir.Size = new Size(75, 23);
             BtnSalir.TabIndex = 11;
@@ -189,7 +191,7 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(537, 25);
+            label4.Location = new Point(717, 25);
             label4.Name = "label4";
             label4.Size = new Size(105, 15);
             label4.TabIndex = 12;
@@ -198,7 +200,7 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(548, 43);
+            label5.Location = new Point(728, 43);
             label5.Name = "label5";
             label5.Size = new Size(94, 15);
             label5.TabIndex = 13;
@@ -207,7 +209,7 @@
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(564, 81);
+            label6.Location = new Point(744, 81);
             label6.Name = "label6";
             label6.Size = new Size(78, 15);
             label6.TabIndex = 14;
@@ -216,7 +218,7 @@
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(544, 63);
+            label7.Location = new Point(724, 63);
             label7.Name = "label7";
             label7.Size = new Size(98, 15);
             label7.TabIndex = 15;
@@ -225,7 +227,7 @@
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new Point(520, 98);
+            label8.Location = new Point(700, 98);
             label8.Name = "label8";
             label8.Size = new Size(124, 15);
             label8.TabIndex = 16;
@@ -239,7 +241,7 @@
             TabControlAutos.Location = new Point(12, 183);
             TabControlAutos.Name = "TabControlAutos";
             TabControlAutos.SelectedIndex = 0;
-            TabControlAutos.Size = new Size(551, 307);
+            TabControlAutos.Size = new Size(732, 307);
             TabControlAutos.TabIndex = 17;
             // 
             // TabListado
@@ -248,7 +250,7 @@
             TabListado.Location = new Point(4, 24);
             TabListado.Name = "TabListado";
             TabListado.Padding = new Padding(3);
-            TabListado.Size = new Size(543, 279);
+            TabListado.Size = new Size(724, 279);
             TabListado.TabIndex = 0;
             TabListado.Text = "Listado";
             TabListado.UseVisualStyleBackColor = true;
@@ -259,7 +261,7 @@
             DataGridAutos.Location = new Point(0, 0);
             DataGridAutos.Name = "DataGridAutos";
             DataGridAutos.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            DataGridAutos.Size = new Size(543, 279);
+            DataGridAutos.Size = new Size(718, 279);
             DataGridAutos.TabIndex = 8;
             // 
             // TabEditar
@@ -281,7 +283,7 @@
             TabEditar.Location = new Point(4, 24);
             TabEditar.Name = "TabEditar";
             TabEditar.Padding = new Padding(3);
-            TabEditar.Size = new Size(543, 279);
+            TabEditar.Size = new Size(724, 279);
             TabEditar.TabIndex = 1;
             TabEditar.Text = "Edición";
             TabEditar.UseVisualStyleBackColor = true;
@@ -289,7 +291,7 @@
             // label14
             // 
             label14.AutoSize = true;
-            label14.Location = new Point(62, 185);
+            label14.Location = new Point(156, 182);
             label14.Name = "label14";
             label14.Size = new Size(68, 15);
             label14.TabIndex = 13;
@@ -298,14 +300,14 @@
             // CmbPropietario
             // 
             CmbPropietario.FormattingEnabled = true;
-            CmbPropietario.Location = new Point(133, 180);
+            CmbPropietario.Location = new Point(227, 177);
             CmbPropietario.Name = "CmbPropietario";
             CmbPropietario.Size = new Size(300, 23);
             CmbPropietario.TabIndex = 12;
             // 
             // btnCancelar
             // 
-            btnCancelar.Location = new Point(358, 241);
+            btnCancelar.Location = new Point(452, 238);
             btnCancelar.Name = "btnCancelar";
             btnCancelar.Size = new Size(75, 23);
             btnCancelar.TabIndex = 11;
@@ -315,7 +317,7 @@
             // 
             // btnGuardar
             // 
-            btnGuardar.Location = new Point(134, 241);
+            btnGuardar.Location = new Point(228, 238);
             btnGuardar.Name = "btnGuardar";
             btnGuardar.Size = new Size(75, 23);
             btnGuardar.TabIndex = 10;
@@ -325,35 +327,35 @@
             // 
             // txtPrecio
             // 
-            txtPrecio.Location = new Point(133, 151);
+            txtPrecio.Location = new Point(227, 148);
             txtPrecio.Name = "txtPrecio";
             txtPrecio.Size = new Size(300, 23);
             txtPrecio.TabIndex = 9;
             // 
             // txtPotencia
             // 
-            txtPotencia.Location = new Point(133, 122);
+            txtPotencia.Location = new Point(227, 119);
             txtPotencia.Name = "txtPotencia";
             txtPotencia.Size = new Size(300, 23);
             txtPotencia.TabIndex = 8;
             // 
             // txtAnio
             // 
-            txtAnio.Location = new Point(133, 93);
+            txtAnio.Location = new Point(227, 90);
             txtAnio.Name = "txtAnio";
             txtAnio.Size = new Size(300, 23);
             txtAnio.TabIndex = 7;
             // 
             // txtModelo
             // 
-            txtModelo.Location = new Point(133, 64);
+            txtModelo.Location = new Point(227, 61);
             txtModelo.Name = "txtModelo";
             txtModelo.Size = new Size(300, 23);
             txtModelo.TabIndex = 6;
             // 
             // txtMarca
             // 
-            txtMarca.Location = new Point(133, 35);
+            txtMarca.Location = new Point(227, 32);
             txtMarca.Name = "txtMarca";
             txtMarca.Size = new Size(300, 23);
             txtMarca.TabIndex = 5;
@@ -361,7 +363,7 @@
             // label13
             // 
             label13.AutoSize = true;
-            label13.Location = new Point(87, 154);
+            label13.Location = new Point(181, 151);
             label13.Name = "label13";
             label13.Size = new Size(43, 15);
             label13.TabIndex = 4;
@@ -370,7 +372,7 @@
             // label12
             // 
             label12.AutoSize = true;
-            label12.Location = new Point(74, 125);
+            label12.Location = new Point(168, 122);
             label12.Name = "label12";
             label12.Size = new Size(56, 15);
             label12.TabIndex = 3;
@@ -379,7 +381,7 @@
             // label11
             // 
             label11.AutoSize = true;
-            label11.Location = new Point(98, 96);
+            label11.Location = new Point(192, 93);
             label11.Name = "label11";
             label11.Size = new Size(32, 15);
             label11.TabIndex = 2;
@@ -388,7 +390,7 @@
             // label10
             // 
             label10.AutoSize = true;
-            label10.Location = new Point(79, 67);
+            label10.Location = new Point(173, 64);
             label10.Name = "label10";
             label10.Size = new Size(51, 15);
             label10.TabIndex = 1;
@@ -397,7 +399,7 @@
             // label9
             // 
             label9.AutoSize = true;
-            label9.Location = new Point(87, 38);
+            label9.Location = new Point(181, 35);
             label9.Name = "label9";
             label9.Size = new Size(43, 15);
             label9.TabIndex = 0;
@@ -405,6 +407,8 @@
             // 
             // TabPropietario
             // 
+            TabPropietario.Controls.Add(BtnModProp);
+            TabPropietario.Controls.Add(BtnEliminarProp);
             TabPropietario.Controls.Add(DataGridPropietarios);
             TabPropietario.Controls.Add(BtnCancelarPropietario);
             TabPropietario.Controls.Add(BtnGuardarPropietario);
@@ -418,10 +422,30 @@
             TabPropietario.Controls.Add(label18);
             TabPropietario.Location = new Point(4, 24);
             TabPropietario.Name = "TabPropietario";
-            TabPropietario.Size = new Size(543, 279);
+            TabPropietario.Size = new Size(724, 279);
             TabPropietario.TabIndex = 2;
             TabPropietario.Text = "Propietario";
             TabPropietario.UseVisualStyleBackColor = true;
+            // 
+            // BtnModProp
+            // 
+            BtnModProp.Location = new Point(30, 240);
+            BtnModProp.Name = "BtnModProp";
+            BtnModProp.Size = new Size(135, 23);
+            BtnModProp.TabIndex = 21;
+            BtnModProp.Text = "Modificar Propietario";
+            BtnModProp.UseVisualStyleBackColor = true;
+            BtnModProp.Click += BtnModProp_Click;
+            // 
+            // BtnEliminarProp
+            // 
+            BtnEliminarProp.Location = new Point(227, 240);
+            BtnEliminarProp.Name = "BtnEliminarProp";
+            BtnEliminarProp.Size = new Size(125, 23);
+            BtnEliminarProp.TabIndex = 20;
+            BtnEliminarProp.Text = "Eliminar Propietario";
+            BtnEliminarProp.UseVisualStyleBackColor = true;
+            BtnEliminarProp.Click += BtnEliminarProp_Click;
             // 
             // DataGridPropietarios
             // 
@@ -429,13 +453,13 @@
             DataGridPropietarios.Location = new Point(3, 4);
             DataGridPropietarios.Name = "DataGridPropietarios";
             DataGridPropietarios.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            DataGridPropietarios.Size = new Size(537, 172);
+            DataGridPropietarios.Size = new Size(718, 172);
             DataGridPropietarios.TabIndex = 19;
             DataGridPropietarios.CellContentClick += DataGridPropietarios_CellContentClick;
             // 
             // BtnCancelarPropietario
             // 
-            BtnCancelarPropietario.Location = new Point(357, 240);
+            BtnCancelarPropietario.Location = new Point(637, 240);
             BtnCancelarPropietario.Name = "BtnCancelarPropietario";
             BtnCancelarPropietario.Size = new Size(75, 23);
             BtnCancelarPropietario.TabIndex = 18;
@@ -445,7 +469,7 @@
             // 
             // BtnGuardarPropietario
             // 
-            BtnGuardarPropietario.Location = new Point(133, 240);
+            BtnGuardarPropietario.Location = new Point(637, 207);
             BtnGuardarPropietario.Name = "BtnGuardarPropietario";
             BtnGuardarPropietario.Size = new Size(75, 23);
             BtnGuardarPropietario.TabIndex = 17;
@@ -522,7 +546,7 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             AutoSize = true;
-            ClientSize = new Size(654, 502);
+            ClientSize = new Size(837, 502);
             Controls.Add(TabControlAutos);
             Controls.Add(label8);
             Controls.Add(label7);
@@ -540,6 +564,7 @@
             Controls.Add(label1);
             Controls.Add(pictureBox1);
             Name = "Form1";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Conautos";
             Load += Form1_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
@@ -601,5 +626,7 @@
         private Label label17;
         private Label label18;
         private DataGridView DataGridPropietarios;
+        private Button BtnModProp;
+        private Button BtnEliminarProp;
     }
 }

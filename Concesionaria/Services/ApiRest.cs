@@ -32,19 +32,20 @@ namespace Concesionaria.Services
             Cliente.DefaultRequestHeaders.Add("x-apikey", ApiKey);
         }
 
+        //------------------CRUD-------AUTOS----------------------------------//
+
         //FUNCIÓN DE CONSULTA (GET)
         public static async Task<List<Auto>> ObtenerTodosLosAutosAsync()
         {
             try
             {
-                //"" apunta a la coleccion 'concesionaria' ya que UrlBase ya la incluye.
                 HttpResponseMessage respuesta = await Cliente.GetAsync("");
 
                 if (respuesta.IsSuccessStatusCode)
                 {
                     string contenidoJson = await respuesta.Content.ReadAsStringAsync();
-                    //deserializacion del json a lista de autos
-                    return JsonSerializer.Deserialize<List<Auto>>(contenidoJson, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    var lista = JsonSerializer.Deserialize<List<Auto>>(contenidoJson, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    return lista ?? new List<Auto>();
                 }
                 else
                 {
@@ -154,39 +155,36 @@ namespace Concesionaria.Services
             }
         }
 
-        //-------------------------------------------------------------------------------//
+        //--------------CRUD-----------PROPIETARIOS----------------------------//
 
-        // FUNCIÓN DE CONSULTA (GET) - Propietario
+        // FUNCIÓN DE CONSULTA (GET)
         public static async Task<List<Propietario>> ObtenerTodosLosPropietariosAsync()
         {
             try
             {
-                // Endpoint: "propietario" (Correcto, coincide con tu DB)
                 HttpResponseMessage respuesta = await Cliente.GetAsync("propietario");
 
                 if (respuesta.IsSuccessStatusCode)
                 {
                     string contenidoJson = await respuesta.Content.ReadAsStringAsync();
-                    // Deserialización: Asegúrate de que el DTO.Propietario sea accesible
-                    return JsonSerializer.Deserialize<List<Propietario>>(contenidoJson, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    var lista = JsonSerializer.Deserialize<List<Propietario>>(contenidoJson, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    return lista ?? new List<Propietario>();
                 }
                 else
                 {
-                    // Manejo de errores de la API (ej: 404, 401)
                     string errorContent = await respuesta.Content.ReadAsStringAsync();
                     MessageBox.Show($"Error al consultar API de Propietarios: {respuesta.StatusCode}. Detalle: {errorContent}", "Error de Conexión");
                 }
             }
             catch (HttpRequestException ex)
             {
-                // Manejo de errores de red
                 MessageBox.Show($"Error de conexión de red (Propietarios): {ex.Message}", "Error de Red");
             }
-            // Siempre devuelve una lista vacía si hay error o la respuesta no es exitosa
+
             return new List<Propietario>();
         }
 
-        // FUNCIÓN DE AGREGAR (POST) - Propietarios
+        // FUNCIÓN DE AGREGAR (POST)
         public static async Task<bool> CrearNuevoPropietarioAsync(Propietario nuevoPropietario)
         {
             string jsonPayload = JsonSerializer.Serialize(nuevoPropietario);
@@ -213,7 +211,7 @@ namespace Concesionaria.Services
             }
         }
 
-        // FUNCIÓN DE MODIFICACIÓN (PUT) - Propietarios
+        // FUNCIÓN DE MODIFICACIÓN (PUT)
         public static async Task<bool> ActualizarPropietarioAsync(Propietario propietarioAActualizar)
         {
             if (string.IsNullOrEmpty(propietarioAActualizar.Id))
@@ -227,6 +225,7 @@ namespace Concesionaria.Services
 
             try
             {
+                // Usar el endpoint de la colección 'propietario' en vez de UrlBase
                 string endpoint = $"propietario/{propietarioAActualizar.Id}";
                 HttpResponseMessage respuesta = await Cliente.PutAsync(endpoint, contenido);
 
@@ -237,18 +236,45 @@ namespace Concesionaria.Services
                 else
                 {
                     string errorContent = await respuesta.Content.ReadAsStringAsync();
-                    MessageBox.Show($"Error al actualizar el propietario: {respuesta.StatusCode}\nDetalle: {errorContent}", "Error PUT Propietario");
+                    MessageBox.Show($"Error al actualizar el propietario: {respuesta.StatusCode}\nDetalle: {errorContent}", "Error PUT");
                     return false;
                 }
             }
             catch (HttpRequestException ex)
             {
-                MessageBox.Show($"Error de conexión al intentar actualizar el propietario: {ex.Message}", "Error de Red");
+                MessageBox.Show($"Error de conexión al intentar actualizar: {ex.Message}", "Error de Red");
                 return false;
             }
-            catch (Exception ex)
+        }
+
+        // FUNCIÓN DE ELIMINACIÓN (DELETE)
+        public static async Task<bool> EliminarPropietarioAsync(string idPropietario)
+        {
+            if (string.IsNullOrEmpty(idPropietario))
             {
-                MessageBox.Show($"Error inesperado al actualizar propietario: {ex.Message}", "Error");
+                MessageBox.Show("No se puede eliminar sin un ID.", "Error de Eliminación");
+                return false;
+            }
+
+            try
+            {                
+                string endpoint = $"propietario/{idPropietario}";
+                HttpResponseMessage respuesta = await Cliente.DeleteAsync(endpoint);
+
+                if (respuesta.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+                else
+                {
+                    string errorContent = await respuesta.Content.ReadAsStringAsync();
+                    MessageBox.Show($"Error al eliminar el propietario: {respuesta.StatusCode}\nDetalle: {errorContent}", "Error DELETE - Detalle Final");
+                    return false;
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                MessageBox.Show($"Error de conexión de red: {ex.Message}", "Error de Red");
                 return false;
             }
         }

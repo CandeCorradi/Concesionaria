@@ -28,12 +28,67 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Text = "Form2";
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MenuPrincipal));
+            menuStrip1 = new MenuStrip();
+            gestiónToolStripMenuItem = new ToolStripMenuItem();
+            ConautosForm = new ToolStripMenuItem();
+            ToolSalir = new ToolStripMenuItem();
+            menuStrip1.SuspendLayout();
+            SuspendLayout();
+            // 
+            // menuStrip1
+            // 
+            menuStrip1.Items.AddRange(new ToolStripItem[] { gestiónToolStripMenuItem, ToolSalir });
+            menuStrip1.Location = new Point(0, 0);
+            menuStrip1.Name = "menuStrip1";
+            menuStrip1.Size = new Size(778, 24);
+            menuStrip1.TabIndex = 0;
+            menuStrip1.Text = "menuStrip1";
+            // 
+            // gestiónToolStripMenuItem
+            // 
+            gestiónToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { ConautosForm });
+            gestiónToolStripMenuItem.Name = "gestiónToolStripMenuItem";
+            gestiónToolStripMenuItem.Size = new Size(59, 20);
+            gestiónToolStripMenuItem.Text = "Gestión";
+            // 
+            // ConautosForm
+            // 
+            ConautosForm.Name = "ConautosForm";
+            ConautosForm.Size = new Size(180, 22);
+            ConautosForm.Text = "Conautos";
+            ConautosForm.Click += ConautosForm_Click;
+            // 
+            // ToolSalir
+            // 
+            ToolSalir.Name = "ToolSalir";
+            ToolSalir.Size = new Size(41, 20);
+            ToolSalir.Text = "Salir";
+            ToolSalir.Click += ToolSalir_Click;
+            // 
+            // MenuPrincipal
+            // 
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            BackColor = SystemColors.ButtonShadow;
+            BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
+            ClientSize = new Size(778, 453);
+            Controls.Add(menuStrip1);
+            MainMenuStrip = menuStrip1;
+            Name = "MenuPrincipal";
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "Menú Principal";
+            menuStrip1.ResumeLayout(false);
+            menuStrip1.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
+
+        private MenuStrip menuStrip1;
+        private ToolStripMenuItem gestiónToolStripMenuItem;
+        private ToolStripMenuItem ToolSalir;
+        private ToolStripMenuItem ConautosForm;
     }
 }
