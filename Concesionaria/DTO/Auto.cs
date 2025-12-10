@@ -19,5 +19,7 @@ namespace WinFormApi1.Repositorio
         public int Anio { get; set; }
         public int Potencia { get; set; }
         public decimal Precio_USD { get; set; }
+        public string Nombre { get; set; }
+        public string Apellido { get; set; }
     }
 }

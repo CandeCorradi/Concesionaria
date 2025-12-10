@@ -1,11 +1,14 @@
-﻿using Concesionaria.Services;
+﻿using Concesionaria.DTO;
+using Concesionaria.Services;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WinFormApi1.Repositorio;
-using System.Globalization;
 
 namespace Concesionaria
 {
@@ -14,6 +17,8 @@ namespace Concesionaria
         private List<Auto> _listaAutosCache = new List<Auto>();
         private bool _esModoEdicion;
         private string _idAutoSeleccionado = string.Empty;
+        private bool _propietarioModoEdicion;
+        private string _idPropietarioSeleccionado;
 
         public Form1()
         {
@@ -36,14 +41,14 @@ namespace Concesionaria
             }
         }
 
-        
+
         private async Task CargarDatosEnGrilla()
         {
             _listaAutosCache = await ApiRest.ObtenerTodosLosAutosAsync() ?? new List<Auto>();
             AplicarFiltroYActualizarGrilla(string.Empty);
         }
 
-        
+
         private async Task CargarDatosEnGrilla(string textoBusqueda)
         {
             if (_listaAutosCache == null || !_listaAutosCache.Any())
@@ -55,7 +60,7 @@ namespace Concesionaria
             AplicarFiltroYActualizarGrilla(textoBusqueda);
         }
 
-       
+
         private void AplicarFiltroYActualizarGrilla(string textoBusqueda)
         {
             IEnumerable<Auto> resultado = _listaAutosCache;
@@ -84,8 +89,11 @@ namespace Concesionaria
 
         private async void Form1_Load(object sender, EventArgs e)
         {
-            TabControlAutos.SelectedTab = DataGridView;
+            TabControlAutos.SelectedTab = TabListado;
             await CargarDatosEnGrilla();
+            TabControlAutos.SelectedIndex = 0;
+            await CargarPropietariosEnComboBox();
+            await CargarDatosPropietariosEnGrilla();
         }
 
         private async void TxtBusqueda_TextChanged(object? sender, EventArgs e)
@@ -121,6 +129,10 @@ namespace Concesionaria
             txtAnio.Text = string.Empty;
             txtPotencia.Text = string.Empty;
             txtPrecio.Text = string.Empty;
+            TxtNombre.Text = string.Empty;
+            TxtApellido.Text = string.Empty;
+            TxtDNI.Text = string.Empty;
+            TxtTelefono.Text = string.Empty;
         }
 
         private async void btnGuardar_Click(object sender, EventArgs e)
@@ -145,8 +157,8 @@ namespace Concesionaria
 
             if (exito)
             {
-                MessageBox.Show("Operación de Guardado exitosa.", "Éxito");                
-                TabControlAutos.SelectedTab = DataGridView;
+                MessageBox.Show("Operación de Guardado exitosa.", "Éxito");
+                TabControlAutos.SelectedTab = TabListado;
                 LimpiarCamposCarga();
                 await CargarDatosEnGrilla();
             }
@@ -200,6 +212,15 @@ namespace Concesionaria
                 }
             }
 
+            string propietarioId = null;
+            DTO.Propietario propietarioSeleccionado = null;
+
+            if (CmbPropietario.SelectedItem is DTO.Propietario seleccionado)
+            {
+                propietarioSeleccionado = seleccionado;
+                propietarioId = seleccionado.Id;
+            }
+
             var auto = new Auto
             {
                 Id = null,
@@ -207,7 +228,9 @@ namespace Concesionaria
                 Modelo = modelo,
                 Anio = anio,
                 Potencia = potencia,
-                Precio_USD = precio
+                Precio_USD = precio,
+                Nombre = propietarioSeleccionado?.Nombre,
+                Apellido = propietarioSeleccionado?.Apellido
             };
 
 
@@ -221,7 +244,7 @@ namespace Concesionaria
 
         private void btnCancelar_Click(object sender, EventArgs e)
         {
-            TabControlAutos.SelectedTab = DataGridView;
+            TabControlAutos.SelectedTab = TabListado;
             LimpiarCamposCarga();
             _esModoEdicion = false;
             _idAutoSeleccionado = string.Empty;
@@ -288,10 +311,111 @@ namespace Concesionaria
             txtMarca.Text = autoAEditar.Marca;
             txtModelo.Text = autoAEditar.Modelo;
             txtAnio.Text = autoAEditar.Anio.ToString();
-            txtPotencia.Text = autoAEditar.Potencia.ToString();            
+            txtPotencia.Text = autoAEditar.Potencia.ToString();
             txtPrecio.Text = autoAEditar.Precio_USD.ToString(System.Globalization.CultureInfo.InvariantCulture);
 
             TabControlAutos.SelectedTab = TabEditar;
+        }
+
+
+        private DTO.Propietario? RecolectarDatosPropietario()
+        {
+            if (string.IsNullOrWhiteSpace(TxtNombre.Text) || string.IsNullOrWhiteSpace(TxtDNI.Text))
+            {
+                MessageBox.Show("Nombre e Identificación (DNI) son obligatorios.", "Validación");
+                return null;
+            }
+
+            if (!int.TryParse(TxtDNI.Text, out int dni))
+            {
+                MessageBox.Show("El DNI debe ser un número entero válido.", "Error de Formato");
+                TxtDNI.Focus();
+                return null;
+            }
+
+            var propietario = new DTO.Propietario
+            {
+                Id = null,
+                Nombre = TxtNombre.Text,
+                Apellido = TxtApellido.Text,
+                DNI = dni,
+                Telefono = TxtTelefono.Text != string.Empty && int.TryParse(TxtTelefono.Text, out int telefono) ? telefono : 0
+            };
+
+            return propietario;
+        }
+
+        private async void BtnGuardarPropietario_Click(object sender, EventArgs e)
+        {
+            DTO.Propietario nuevoPropietario = RecolectarDatosPropietario();
+
+            if (nuevoPropietario == null) return; // Si la validación falló
+
+            // Llamamos a la API con la función que ya está en ApiRest.cs
+            bool exito = await Services.ApiRest.CrearNuevoPropietarioAsync(nuevoPropietario);
+
+            if (exito)
+            {
+                MessageBox.Show("Propietario registrado con éxito.", "Éxito");
+
+                // Refrescamos las vistas que usan esta colección:
+                await CargarDatosPropietariosEnGrilla(); // Grilla de la pestaña Propietario
+                await CargarPropietariosEnComboBox();    // El ComboBox de la pestaña Edición
+
+                // Limpiamos los campos para poder cargar uno nuevo
+                // (Debes crear la función LimpiarCamposPropietario())
+                LimpiarCamposPropietario();
+            }
+        }
+
+        private async Task CargarPropietariosEnComboBox()
+        {
+            List<DTO.Propietario> listaPropietarios = await Services.ApiRest.ObtenerTodosLosPropietariosAsync();
+            CmbPropietario.DataSource = null;
+            CmbPropietario.DataSource = listaPropietarios;
+            CmbPropietario.DisplayMember = "NombreCompleto"; // Asumiendo que tienes una propiedad NombreCompleto en DTO.Propietario
+            CmbPropietario.ValueMember = "Id";
+        }
+
+        private async Task CargarDatosPropietariosEnGrilla()
+        {
+            List<DTO.Propietario> listaPropietarios = await Services.ApiRest.ObtenerTodosLosPropietariosAsync();
+            DataGridPropietarios.DataSource = null;
+            DataGridPropietarios.DataSource = listaPropietarios;
+        }
+
+        private void LimpiarCamposPropietario()
+        {
+            TxtNombre.Text = string.Empty;
+            TxtApellido.Text = string.Empty;
+            TxtDNI.Text = string.Empty;
+            TxtTelefono.Text = string.Empty;
+        }
+
+        private void DataGridPropietarios_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (DataGridPropietarios.SelectedRows.Count == 0) return;
+
+            // Obtener el objeto Propietario de la fila seleccionada
+            DTO.Propietario propSeleccionado = (DTO.Propietario)DataGridPropietarios.SelectedRows[0].DataBoundItem;
+
+            // 1. Cargar datos en los TextBoxes
+            TxtNombre.Text = propSeleccionado.Nombre;
+            TxtApellido.Text = propSeleccionado.Apellido;
+            TxtDNI.Text = propSeleccionado.DNI.ToString();
+            TxtTelefono.Text = propSeleccionado.Telefono.ToString();
+
+            // 2. Establecer el estado: Modo Edición
+            _propietarioModoEdicion = true;
+            _idPropietarioSeleccionado = propSeleccionado.Id;
+        }
+
+        private void BtnCancelarPropietario_Click(object sender, EventArgs e)
+        {
+            TabControlAutos.SelectedTab = TabListado;
+            LimpiarCamposCarga();
+            _propietarioModoEdicion = false;
+            _idPropietarioSeleccionado = string.Empty;
         }
     }
 }
