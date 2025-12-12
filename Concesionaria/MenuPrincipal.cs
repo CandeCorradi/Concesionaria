@@ -19,7 +19,12 @@ namespace Concesionaria
 
         private void ToolSalir_Click(object sender, EventArgs e)
         {
-            this.Close();
+            DialogResult result = MessageBox.Show("¿Está seguro que desea salir?", "Salir", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result == DialogResult.Yes)
+            {
+                Application.Exit();
+            }
+
         }
 
         private void ConautosForm_Click(object sender, EventArgs e)

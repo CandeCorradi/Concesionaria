@@ -135,6 +135,7 @@ namespace Concesionaria
             TxtApellido.Text = string.Empty;
             TxtDNI.Text = string.Empty;
             TxtTelefono.Text = string.Empty;
+            TxtCiudad.Text = string.Empty;
         }
 
         private async void btnGuardar_Click(object sender, EventArgs e)
@@ -324,6 +325,7 @@ namespace Concesionaria
         {
             string nombre = TxtNombre.Text?.Trim() ?? string.Empty;
             string dniText = TxtDNI.Text?.Trim() ?? string.Empty;
+            string ciudad = TxtCiudad.Text?.Trim() ?? string.Empty;
 
             if (string.IsNullOrWhiteSpace(nombre) || string.IsNullOrWhiteSpace(dniText))
             {
@@ -344,13 +346,20 @@ namespace Concesionaria
                 return null;
             }
 
+            if (string.IsNullOrWhiteSpace(ciudad) || string.IsNullOrWhiteSpace(ciudad))
+            {
+                MessageBox.Show("Nombre e Identificación (DNI) son obligatorios.", "Validación");
+                return null;
+            }
+
             var propietario = new DTO.Propietario
             {
                 Id = null,
                 Nombre = nombre,
                 Apellido = TxtApellido.Text,
                 DNI = dni,
-                Telefono = telefono
+                Telefono = telefono,
+                Ciudad = ciudad
             };
 
             if (_propietarioModoEdicion)

@@ -10,8 +10,7 @@ using WinFormApi1; //estan nuestro objetos. Data Transfer Object = DTO
 namespace WinFormApi1.Repositorio
 {
     public class Auto
-    {
-        // El ID debe ser mapeado desde el campo "_id" de RestDB.io
+    {        
         [JsonPropertyName("_id")]
         public string Id { get; set; }
         public string Marca { get; set; }

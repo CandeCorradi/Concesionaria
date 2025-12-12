@@ -18,7 +18,7 @@ namespace Concesionaria.Services
     {
         private static readonly HttpClient Cliente = new HttpClient();
 
-        // Base de la API (sin la colección)
+        // Base de la API 
         private const string UrlBase = "https://cinesoftwareisp-a633.restdb.io/rest/concesionaria";
 
         // Atención: mover la API key a configuración / variable de entorno en producción
@@ -36,10 +36,10 @@ namespace Concesionaria.Services
 
         //FUNCIÓN DE CONSULTA (GET)
         public static async Task<List<Auto>> ObtenerTodosLosAutosAsync()
-        {
+        {            
             try
             {
-                HttpResponseMessage respuesta = await Cliente.GetAsync("");
+                HttpResponseMessage respuesta = await Cliente.GetAsync(""); 
 
                 if (respuesta.IsSuccessStatusCode)
                 {
@@ -192,7 +192,6 @@ namespace Concesionaria.Services
 
             try
             {
-                // Endpoint: "propietario" (Correcto)
                 HttpResponseMessage respuesta = await Cliente.PostAsync("propietario", contenido);
 
                 if (respuesta.IsSuccessStatusCode) return true;
@@ -225,7 +224,6 @@ namespace Concesionaria.Services
 
             try
             {
-                // Usar el endpoint de la colección 'propietario' en vez de UrlBase
                 string endpoint = $"propietario/{propietarioAActualizar.Id}";
                 HttpResponseMessage respuesta = await Cliente.PutAsync(endpoint, contenido);
 
@@ -278,6 +276,8 @@ namespace Concesionaria.Services
                 return false;
             }
         }
+
+        
     }
 
 }

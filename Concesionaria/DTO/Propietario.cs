@@ -17,8 +17,8 @@ namespace Concesionaria.DTO
         public int DNI { get; set; }
         [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString)]
         public int Telefono { get; set; }
+        public string Ciudad { get; set; } = string.Empty;
 
-        // Convertimos a propiedad para que DataBinding y DisplayMember funcionen correctamente
         [JsonIgnore]
         public string NombreCompleto => $"{Nombre} {Apellido}";
 
